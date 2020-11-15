@@ -3,6 +3,7 @@ import java.util.Random;
 public class Monkey implements Runnable {
 
     private int GET_ROPE_TIME = 1000;
+    private int GET_TRAVEL_TIME = 4000;
 
     public void run() {
 
