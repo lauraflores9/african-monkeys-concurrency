@@ -5,7 +5,7 @@ public class Monkey implements Runnable {
 
     private int GET_ROPE_TIME = 1000;
     private int GET_TRAVEL_TIME = 4000;
-    private int MAX_MONKEYS_ON_ROPE = 5;
+    private int MAX_MONKEYS_ON_ROPE = 1;
     private String side;
     private int monkeyId;
 
@@ -27,6 +27,13 @@ public class Monkey implements Runnable {
     public void run() {
         System.out.println("Hello, it's monkey " + this.monkeyId +
                 " and my side is " + this.side);
+        try {
+            int sleepTime = getSpawnTime();
+            System.out.println("Info: " + this.monkeyId + " " + sleepTime);
+            Thread.sleep(getSpawnTime());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         if(this.side == "East") {
             travelWest();
@@ -44,26 +51,29 @@ public class Monkey implements Runnable {
             mutex.acquire();
             while(westMonkeysOnRope > 0) {
                 eastMonkeysWaiting++;
-                mutex.release();
                 System.out.println("Me enfado y no respiro " + this.monkeyId);
+                mutex.release();
                 eastQueue.acquire();
                 mutex.acquire();
             }
 
-            if(eastMonkeysOnRope < MAX_MONKEYS_ON_ROPE) {
-                Thread.sleep(GET_ROPE_TIME);
-                eastMonkeysOnRope++;
-                System.out.println("Hello, it's monkey " + this.monkeyId +
-                        " and i'm crossing");
-                mutex.release();
-                mutex.acquire();
-                eastMonkeysOnRope--;
-                System.out.println("Hello, it's monkey " + this.monkeyId +
-                        " and i've crossed");
+            Thread.sleep(GET_ROPE_TIME);
+            eastMonkeysOnRope++;
+            System.out.println("Hello, it's monkey " + this.monkeyId +
+                    " and i'm crossing, we are " + eastMonkeysOnRope +
+                    " bros on the rope");
+            mutex.release();
+            Thread.sleep(GET_TRAVEL_TIME);
+            mutex.acquire();
+            eastMonkeysOnRope--;
+            System.out.println("Hello, it's monkey " + this.monkeyId +
+                    " and i've crossed");
+            if(eastMonkeysOnRope == 0) {
+                while(westMonkeysWaiting-- > 0) {
+                    westQueue.release();
+                }
             }
             mutex.release();
-
-            //Thread.sleep(GET_TRAVEL_TIME);
 
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
@@ -79,26 +89,29 @@ public class Monkey implements Runnable {
             mutex.acquire();
             while(eastMonkeysOnRope > 0) {
                 westMonkeysWaiting++;
-                mutex.release();
                 System.out.println("Me enfado y no respiro " + this.monkeyId);
+                mutex.release();
                 westQueue.acquire();
                 mutex.acquire();
             }
 
-            if(westMonkeysOnRope < MAX_MONKEYS_ON_ROPE) {
-                Thread.sleep(GET_ROPE_TIME);
-                westMonkeysOnRope++;
-                System.out.println("Hello, it's monkey " + this.monkeyId +
-                        " and i'm crossing");
-                mutex.release();
-                mutex.acquire();
-                westMonkeysOnRope--;
-                System.out.println("Hello, it's monkey " + this.monkeyId +
-                        " and i've crossed");
+            Thread.sleep(GET_ROPE_TIME);
+            westMonkeysOnRope++;
+            System.out.println("Hello, it's monkey " + this.monkeyId +
+                    " and i'm crossing, we are " + westMonkeysOnRope +
+                    " bros on the rope");
+            mutex.release();
+            Thread.sleep(GET_TRAVEL_TIME);
+            mutex.acquire();
+            westMonkeysOnRope--;
+            System.out.println("Hello, it's monkey " + this.monkeyId +
+                    " and i've crossed");
+            if(westMonkeysOnRope == 0) {
+                while(eastMonkeysWaiting-- > 0) {
+                    eastQueue.release();
+                }
             }
             mutex.release();
-
-            //Thread.sleep(GET_TRAVEL_TIME);
 
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
@@ -127,7 +140,7 @@ public class Monkey implements Runnable {
     }
 
     public static void main(String[] args) {
-        int totalMonkeys = 5;
+        int totalMonkeys = 10;
         for (int i = 0; i < totalMonkeys; i++) {
             new Thread(new Monkey(i)).start();
         }
