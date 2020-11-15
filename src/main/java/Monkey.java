@@ -4,6 +4,13 @@ public class Monkey implements Runnable {
 
     private int GET_ROPE_TIME = 1000;
     private int GET_TRAVEL_TIME = 4000;
+    private String side;
+    private int monkeyId;
+
+    public Monkey(String side, int monkeyId) {
+        this.side = side;
+        this.monkeyId = monkeyId;
+    }
 
     public void run() {
 
@@ -15,9 +22,9 @@ public class Monkey implements Runnable {
         final int SIDE_THRESHOLD = 5;
 
         Random ran = new Random();
-        int side = ran.nextInt((MAX_LIMIT - MIN_LIMIT) + 1) + MIN_LIMIT;
+        int initialSide = ran.nextInt((MAX_LIMIT - MIN_LIMIT) + 1) + MIN_LIMIT;
 
-        return side <= SIDE_THRESHOLD ? "East" : "West";
+        return initialSide <= SIDE_THRESHOLD ? "East" : "West";
     }
 
     private int getSpawnTime() {
