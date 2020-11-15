@@ -17,6 +17,16 @@ public class Monkey implements Runnable {
         return side <= SIDE_THRESHOLD ? "East" : "West";
     }
 
+    private int getSpawnTime() {
+        final int MIN_TIME = 1;
+        final int MAX_TIME = 8;
+
+        Random ran = new Random();
+        int time = ran.nextInt((MAX_TIME - MIN_TIME) + 1) + MIN_TIME;
+
+        return time;
+    }
+
     public static void main(String[] args) {
         
     }
