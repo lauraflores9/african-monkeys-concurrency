@@ -2,6 +2,8 @@ import java.util.Random;
 
 public class Monkey implements Runnable {
 
+    private int GET_ROPE_TIME = 1000;
+
     public void run() {
 
     }
@@ -24,7 +26,7 @@ public class Monkey implements Runnable {
         Random ran = new Random();
         int time = ran.nextInt((MAX_TIME - MIN_TIME) + 1) + MIN_TIME;
 
-        return time;
+        return time * 1000;
     }
 
     public static void main(String[] args) {
