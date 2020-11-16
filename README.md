@@ -14,4 +14,22 @@ For this exercise, you are to write a program to simulate activity for this cany
 * Each monkey takes 1 second to get on the rope. (That is, the minimum inter-monkey spacing is 1 second).
 * All monkeys travel at the same speed. Each traversal takes exactly 4 seconds, after the monkey is on the rope. 
 
-Enjoy it!
+## Future work
+
+* Dockerize application.
+* Add docker-compose.
+* Substitute prints with a logger.
+* Add tests.
+* Add CI/CD.
+
+## How to build
+
+```bash
+mvn compile
+```
+
+## How to run
+
+```bash
+mvn exec:java -Dexec.mainClass="Monkey"
+```
